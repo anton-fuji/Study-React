@@ -111,3 +111,39 @@ function Profile() {
 - `createContext()`	Contextを作る
 - `Provider`	データを渡す役割（親側）
 - `useContext()`	データを取り出す役割（子側）
+
+## useReducer
+**状態管理をもうちょっと「ロジック分離して」「きれいに整理する」ためのHook**
+
+### ①reducer関数を作る（状態をどう変えるか）
+```jsx
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+}
+```
+
+### ②useReducerを使う
+```jsx
+import { useReducer } from 'react';
+
+const initialState = { count: 0 };
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <>
+      <p>カウント: {state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+    </>
+  );
+}
+```
