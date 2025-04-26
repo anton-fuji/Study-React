@@ -74,3 +74,40 @@ const Example = () => {
 - 依存配列が空なら「初回マウント時だけ」実行
 - 依存配列に値を渡すと、その値が変わるたびに再実行
 - return でクリーンアップ処理も書ける（例：タイマー解除など）
+
+## useContex
+***ReactのContext（共有データの仕組み）を、コンポーネント内で簡単に使えるようにするためのHook***
+「親からpropsをたくさん渡さなくても、どこでも共通データが取れる」感じ
+
+### ①Contex作成
+```jsx
+import { createContext } from 'react';
+export const UserContext = createContext(null);
+```
+
+### ②Providerでデータを渡す
+```jsx
+<UserContext.Provider value={{ name: "山田", age: 20 }}>
+  <App />
+</UserContext.Provider>
+```
+
+### ③useContextで取り出す
+```jsx
+import { useContext } from 'react';
+import { UserContext } from './UserContext';
+
+function Profile() {
+  const user = useContext(UserContext);
+
+  return (
+    <div>
+      名前: {user.name}, 年齢: {user.age}
+    </div>
+  );
+}
+```
+
+- `createContext()`	Contextを作る
+- `Provider`	データを渡す役割（親側）
+- `useContext()`	データを取り出す役割（子側）
