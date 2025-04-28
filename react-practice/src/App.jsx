@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 // import DateFetcher from './components/useEffect'
 import MyUseContext1 from './components/MyUseContext1'
 import FetchFood from './components/MyUseContextFood'
+import ParentComponent from './components/MyUseCallback'
 
 
 
@@ -26,12 +27,13 @@ function App() {
         {/* <ItemComponent /> */}
         {/* <EventListener /> */}
         {/* <Counter /> */}
-        <UserFromAppContext.Provider value={user}>
+        {/* <UserFromAppContext.Provider value={user}>
           <FoodFromMyUseContext.Provider value={food}>
             <MyUseContext1 />
           </FoodFromMyUseContext.Provider>
-        </UserFromAppContext.Provider>
+        </UserFromAppContext.Provider> */}
         {/* <DateFetcher /> */}
+        <ParentComponent />
     </div>
   )
   
