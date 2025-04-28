@@ -147,3 +147,103 @@ function Counter() {
   );
 }
 ```
+
+## useCallback
+- 親コンポーネントから子コンポーネントへ「関数」を渡すとき
+- 子側で React.memo（または PureComponent） を使っているとき
+- 再レンダーのたびに同じ関数リテラルが生成され、子が無駄に再描画されるのを抑制したい場合
+**※src/components/MyuseCallback.jsxを参照**
+
+## useMemo
+- 高コストな計算結果をキャッシュしたいとき
+- 配列のフィルタ・ソート結果、複雑なオブジェクト生成など
+- 依存配列が変わらない限り再計算をスキップしてパフォーマンス向上
+```jsx
+import React, { useState, useMemo } from 'react';
+
+export default function FilteredList() {
+  const [search, setSearch] = useState('');
+  const items = ['apple', 'banana', 'grape', 'orange'];
+
+  // items フィルタ結果をメモ化
+  const filtered = useMemo(() => {
+    console.log('Filtering items…');
+    return items.filter(item => item.includes(search));
+  }, [search]); // search が変わるときだけ再計算
+
+  return (
+    <div>
+      <input
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        placeholder="Search…"
+      />
+      <ul>
+        {filtered.map(item => (
+          <li key={item}>{item}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## useRef
+- DOM 参照
+  - `<input ref={myRef} />` のように直接フォーカス制御・値取得したいとき
+- 再レンダー不要な mutable 値
+  - タイマー ID、前回の状態保持、アニメーションフレーム ID などを保持したいが、値更新で再レンダーは起こしたくないとき
+
+
+### DOM操作
+```jsx
+import React, { useRef } from 'react';
+
+export default function TextInputWithFocusButton() {
+  const inputEl = useRef(null);
+
+  const onButtonClick = () => {
+    // 再レンダーなしで input をフォーカス
+    inputEl.current.focus();
+  };
+
+  return (
+    <div>
+      <input ref={inputEl} type="text" placeholder="ここをフォーカス" />
+      <button onClick={onButtonClick}>Focus the input</button>
+    </div>
+  );
+}
+
+```
+
+### mutable 値保持での useRef
+```jsx
+import React, { useRef, useState } from 'react';
+
+export default function Stopwatch() {
+  const timerId = useRef(null);    // タイマー ID を保持
+  const [seconds, setSeconds] = useState(0);
+
+  const start = () => {
+    if (timerId.current === null) {
+      timerId.current = setInterval(() => {
+        setSeconds(s => s + 1);
+      }, 1000);
+    }
+  };
+
+  const stop = () => {
+    clearInterval(timerId.current);
+    timerId.current = null;
+  };
+
+  return (
+    <div>
+      <p>Seconds: {seconds}</p>
+      <button onClick={start}>Start</button>
+      <button onClick={stop}>Stop</button>
+    </div>
+  );
+}
+```
